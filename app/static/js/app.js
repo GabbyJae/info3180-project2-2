@@ -2,7 +2,7 @@ Vue.component('header-app',{
     template: `
         <header>
             <ul class="nav_bar">
-            <li class="nav_item logo"><router-link class="router_link logo" to="/"><img class="logo_image" src="./static/img/logo.png">Photogram</router-link></li>
+            <li class="nav_item logo"><router-link class="router_link logo" to="/"><img class="logo_image" src="./static/images/logo.png">Photogram</router-link></li>
             <li class="nav_item"><router-link class="router_link" to="/logout">Logout</router-link></li> 
             <li class="nav_item"><router-link  class="router_link" v-bind:to="'/users/'+user_id">My Profile</router-link></li>   
             <li class="nav_item"><router-link  class="router_link" to="/explore">Explore</router-link></li>   
@@ -39,14 +39,14 @@ const Home = Vue.component('home',{
     template:
     `<div class="body-container">
         <div class="inforbox">
-            <img class="wallpaper_small" src="./static/img/beach.jpg">
+            <img class="wallpaper_small" src="./static/images/beach.jpg">
         </div>
          <div class="inforbox">
             <table class="info_table">
                 <tbody>
                     <tr class="top_table">
                         <td>
-                            <img class="logo_image" src="./static/img/camera.jpg">
+                            <img class="logo_image" src="./static/images/camera.jpg">
                             <p class="logo small_logo">Photogram</p>
                         </td>
                     </tr>
@@ -72,7 +72,7 @@ const Home = Vue.component('home',{
 
 const Register = Vue.component('register',{
     template: `  
-   <form id="signupform" method="POST" enctype="multipart/form-data" @submit.prevent="register">
+   <form id="signupform" method="POST" enctype="multipart/form-data" @submit.prevent ="register">
         <table class="userinformation">
               <tr>
                   <h4><label for="username">Username</label></h4>
@@ -134,14 +134,7 @@ const Register = Vue.component('register',{
                     let photo = document.getElementById('photo').value;
                     let form = document.getElementById("signupform");
                     let formData = new FormData(form);
-            fetch("/api/user/register",{
-                method:'POST',
-                body:formData,
-                header:{
-                    "Content-Type": "application/json",
-                    "Authorization":"X-Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.1IgQSJegDKFAAJyua8STZ1X9M62Ykq4cZjxXRUjq6JI"
-                }
-            }).then(function(response){
+            fetch("/api/user/register",{method:'POST',body:formData,header:{'content-type': 'application/json',"Authorization":"X-Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.1IgQSJegDKFAAJyua8STZ1X9M62Ykq4cZjxXRUjq6JI"}}).then(function(response){
                 return response.json();
             }).then(function (jsonResponse){
                 if(jsonResponse.message == "Username taken" || jsonResponse.message=="Required Field is missing" || jsonResponse.message=="Please submit a profile photo"){
@@ -206,8 +199,8 @@ const Login = Vue.component('login',{
         fetch('/api/auth/login', {
           method: 'POST',
           body: form_data,
-          headers: { 
-              "Content-Type": "application/json",
+          headers: {
+              'content-type': 'application/json',
             },
 
           }).then(function(response){
@@ -350,7 +343,7 @@ const Profile = Vue.component('profile',{
             fetch("/api/users/"+user_id+"/posts",{
                 method:'GET',
                 headers:{
-                    "Content-Type": "application/json",
+                    'content-type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function(response){
@@ -398,7 +391,7 @@ const Profile = Vue.component('profile',{
             fetch("/api/users/"+user_id+"/follow",{
                 method:'POST',
                 headers:{
-                    "Content-Type": "application/json",
+                    'content-type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function(response){
@@ -498,7 +491,7 @@ const Explore = Vue.component('explore',{
             fetch("/api/posts",{
                 method:'GET',
                 headers:{
-                    "Content-Type": "application/json",
+                    'content-type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             }).then(function(response){
@@ -535,7 +528,7 @@ const Explore = Vue.component('explore',{
                         fetch("/api/posts",{
                         method:'GET',
                         headers:{
-                            "Content-Type": "application/json",
+                            'content-type': 'application/json',
                             'Authorization': 'Bearer ' + localStorage.getItem('token')
                         }
                          }).then(function(response){

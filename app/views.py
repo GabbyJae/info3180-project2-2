@@ -59,7 +59,7 @@ def load_user(id):
 @app.route('/api/user/register', methods=['POST'])
 def user_register():
     
-        
+        #request.headers['Content-Type'] = 'application/json'
         firstname = request.form['firstname']
         lastname = request.form['lastname']
         username = request.form['username']
@@ -67,6 +67,7 @@ def user_register():
         email = request.form['email']
         location = request.form['location']
         bio = request.form['biography']
+        date_joined = format_date_joined()
 
         try:
             photo = request.files['photo']
@@ -82,16 +83,23 @@ def user_register():
              print('Ok')
              
         filename = secure_filename(photo.filename)
-        photo.save(os.path.join("./app/static/uploads",filename))
+        #photo.save(os.path.join("./app/static/uploads",filename))
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 
         password = generate_password_hash(passwordraw, method='sha256')
         
-        user = Users(firstname,lastname,email,username,location,password,bio,filename)
-                    
+        #user = Users(firstname,lastname,email,username,location,password,bio,filename)
+        user = Users(username, password, firstname, lastname, email, location, bio, filename,date_joined)            
+        #print(user.get_id());
         db.session.add(user)
         db.session.commit()
         
         return jsonify({'message':'Sucessfully Registered'})
+
+
+def format_date_joined():
+    date_joined = datetime.datetime.now()
+    return "Joined on " + date_joined.strftime("%B %m, %Y")
     
 
 @app.route('/api/auth/login',methods=["POST"])
