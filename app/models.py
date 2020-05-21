@@ -48,7 +48,7 @@ class Users(db.Model):
     joined_on = db.Column(db.String(255))
 
     def __init__(self,Username,PW,firstName,lastName,email,loc,bio,pic,date_joined):
-        self.id = 1;
+        self.id = 2;
         self.username = Username
         self.password = PW
         self.firstname = firstName

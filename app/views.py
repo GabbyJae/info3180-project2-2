@@ -1,5 +1,5 @@
 from app import app, login_manager
-from flask import request, redirect, url_for, render_template,jsonify,session,make_response,g
+from flask import request, redirect, url_for, render_template,jsonify,session,make_response,g,flash
 from app.models import Users,Posts,Follows,Likes
 from app import db
 from werkzeug.security import generate_password_hash,check_password_hash
@@ -106,21 +106,26 @@ def format_date_joined():
 def login():
     error=None
     form = LoginForm()
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST':
+        print("-- I'm here 1 --")
+        if form.validate_on_submit():
+            print("-- I'm here 2 --")
 
-        username = request.form['username']
-        password = request.form['password']
+            username = request.form['username']
+            password = request.form['password']
 
-        user = Users.query.filter_by(user_name = username).first()
+            user = Users.query.filter_by(username = username).first()
 
-        if user and user.is_correct_password(password): 
-            login_user(user)
-            payload = {'id': current_user.id, 'username': current_user.user_name}
-            token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256') 
-            return jsonify({'user_id': user_id, 'token':token,'message':'User successfully logged in!'})
+            if user and user.is_correct_password(password): 
+                login_user(user)
+                payload = {'id': current_user.id, 'username': current_user.user_name}
+                token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256') 
+                return jsonify({'user_id': user_id, 'token':token,'message':'User successfully logged in!'})
+            else:
+                error = "Invalid email and/or password"
+                return jsonify({'errors': error})
         else:
-            error = "Invalid email and/or password"
-            return jsonify({'errors': error})
+            return jsonify({'errors':form_errors(form)})
     else:
         return jsonify({'errors':form_errors(form)})
             
@@ -286,8 +291,7 @@ def likes(post_id):
 def form_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
-            flash(u"Error in the %s field - %s" % (
-                getattr(form, field).label.text,error), 'danger')
+            flash(u"Error in the %s field - %s" % (getattr(form, field).label.text,error), 'danger')
 
 
 @app.after_request

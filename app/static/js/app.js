@@ -158,7 +158,7 @@ const Login = Vue.component('login',{
     template: ` 
         <div>
         <h2 class="title">Login</h2>
-        <form id="loginform" method="POST" enctype="multipart/form-data" @submit.prevent="login">
+        <form id="loginform" method="POST" enctype="multipart/form-data" @submit.prevent="loginform">
              <table class="logininformation">
               <tr v-for="mess in error" class="error1">
                   <h4>{{mess}}</h4>
@@ -196,14 +196,7 @@ const Login = Vue.component('login',{
         let self=this;
         let loginForm = document.getElementById('loginform');
         let form_data = new FormData(loginForm);
-        fetch('/api/auth/login', {
-          method: 'POST',
-          body: form_data,
-          headers: {
-              'content-type': 'application/json',
-            },
-
-          }).then(function(response){
+        fetch('/api/auth/login', {method:'POST',body: form_data,header:{'content-type': 'application/json'}}).then(function(response){
                 return response.json();
             }).then(function (response){
                 if(response.message == "success" ){
@@ -292,7 +285,7 @@ const Profile = Vue.component('profile',{
     template:`
         <div id="profile">
            <div class="profileinfo">
-                   <img class="big_profile_photo" v-bind:src="'./static/img/'+user.profile_photo" />
+                   <img class="big_profile_photo" v-bind:src="'./static/img/'+ user.profile_photo" />
                    <div class="userinfo">
                           <h3>{{user.firstname}} {{user.lastname}}</h3>
                           <h5>{{user.location}}<br>Member since {{user.created_on}}</h5>
