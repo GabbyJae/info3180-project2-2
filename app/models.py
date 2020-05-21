@@ -59,6 +59,15 @@ class Users(db.Model):
         self.profile_photo = pic
         self.joined_on = date_joined
 
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
     def get_id(self):
         try:
             return unicode(self.id)

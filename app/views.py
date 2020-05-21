@@ -108,24 +108,22 @@ def login():
     form = LoginForm()
     if request.method == 'POST':
         print("-- I'm here 1 --")
-        if form.validate_on_submit():
+       
+
+        username = request.form['username']
+        password = request.form['password']
+
+        user = Users.query.filter_by(username = username).first()
+
+        if user and check_password_hash(user.password,password):
             print("-- I'm here 2 --")
-
-            username = request.form['username']
-            password = request.form['password']
-
-            user = Users.query.filter_by(username = username).first()
-
-            if user and user.is_correct_password(password): 
-                login_user(user)
-                payload = {'id': current_user.id, 'username': current_user.user_name}
-                token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256') 
-                return jsonify({'user_id': user_id, 'token':token,'message':'User successfully logged in!'})
-            else:
-                error = "Invalid email and/or password"
-                return jsonify({'errors': error})
+            login_user(user)
+            payload = {'id': current_user.id, 'username': current_user.username}
+            token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256') 
+            return jsonify({'user_id': 1, 'token':token,'message':'User successfully logged in!'})
         else:
-            return jsonify({'errors':form_errors(form)})
+            error = "Invalid email and/or password"
+            return jsonify({'errors': error})
     else:
         return jsonify({'errors':form_errors(form)})
             
